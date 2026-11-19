@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolo Console</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="side" aria-label="Shop navigation">
+  <div class="brand"><span class="logo">ಬೋ</span><div><b>Bolo</b><small id="shopName">—</small></div></div>
+  <button id="menuToggle" class="menu-toggle" aria-controls="nav" aria-expanded="false">Menu</button>
+  <nav id="nav" aria-label="Console views">
+    <a href="#dashboard" data-view="dashboard" class="active">Dashboard</a>
+    <a href="#live" data-view="live">Live watch <span id="liveBadge" class="badge hidden"></span></a>
+    <a href="#phone" data-view="phone">Try it (phone)</a>
+    <a href="#ledger" data-view="ledger">Khata</a>
+    <a href="#polls" data-view="polls">Polls &amp; tasks</a>
+    <a href="#approvals" data-view="approvals">Approvals <span id="apprBadge" class="badge hidden"></span></a>
+    <a href="#people" data-view="people">People &amp; roles</a>
+    <a href="#products" data-view="products">Products</a>
+    <a href="#features" data-view="features">Features</a>
+    <a href="#knowledge" data-view="knowledge">Knowledge</a>
+    <a href="#templates" data-view="templates">Templates</a>
+    <a href="#settings" data-view="settings">Settings</a>
+    <a href="#activity" data-view="activity">Activity</a>
+  </nav>
+  <div class="status" id="status"></div>
+</aside>
+
+<main>
+  <div id="pageState" role="status" class="view-state">Opening shop…</div>
+  <!-- Onboarding (shown until the business is set up) -->
+  <section id="v-onboard" class="view hidden">
+    <div class="card onboard">
+      <h1>Tell Bolo about your business</h1>
+      <p class="muted">One or two lines, in any language. Bolo sets up roles, features and words for you, and you can change everything later.
+      You can also just send this as the first WhatsApp voice note from the owner's phone.</p>
+      <form id="onboardForm" class="formgrid">
+        <label style="grid-column:1/-1">What does your business do?<textarea name="description" rows="3" required
+          placeholder="e.g. We run Sunrise Public School in Jayanagar, classes 1–7. / Lakshmi Stores is a kirana; customers order by voice and buy on credit."></textarea></label>
+        <label>Business name (optional)<input name="name"></label>
+        <label>Type (optional, auto-detected)<select name="type" id="typeSel"><option value="">Auto-detect</option></select></label>
+        <label>Owner WhatsApp number<input name="owner_phone" placeholder="98xxxxxxxx"></label>
+        <label>Owner language<select name="owner_lang" class="langsel"></select></label>
+        <div class="formactions"><button type="submit">Set up my bot</button>
+          <span class="muted">or try a demo:</span><button type="button" class="ghost" data-demo="kirana">Kirana demo</button>
+          <button type="button" class="ghost" data-demo="school">School demo</button></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Live watch -->
+  <section id="v-live" class="view hidden">
+    <header><h1>Live watch</h1>
+      <div class="actions"><span id="waMode" class="pill"></span>
+        <label class="switch"><input type="checkbox" id="pauseAll"><span>Pause bot (watch only)</span></label></div></header>
+    <p class="muted">Every WhatsApp chat as it happens: voice notes with transcripts, what Bolo replied, buttons pressed.
+      <b>Pause bot</b> = Bolo records and transcribes but stays silent. <b>Take over</b> a chat to reply yourself.</p>
+    <div class="phonewrap wide">
+      <div class="who" id="threadList" aria-label="Conversations"></div>
+      <div class="phone">
+        <div class="phonehead" id="liveHead">Pick a chat</div>
+        <div class="chat" id="liveChat" aria-label="Live conversation"><p class="chat-empty">Select a conversation to read its messages.</p></div>
+        <div class="composer"><label class="switch small"><input type="checkbox" id="takeover" disabled><span>Take over</span></label>
+          <input id="liveInput" aria-label="Reply as the business" placeholder="Reply as the business…" disabled><button id="liveSend" disabled>Send</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="v-features" class="view hidden">
+    <header><h1>Features</h1><p class="muted">Core features are always on. Packs were switched on for your business type; turn any of them on or off.</p></header>
+    <div class="featgrid" id="featGrid"></div>
+  </section>
+
+  <!-- Knowledge -->
+  <section id="v-knowledge" class="view hidden">
+    <header><h1>Knowledge</h1><p class="muted">Your bot's brain: files it can share (price list, fee structure, forms, invoice formats) and facts it uses to answer questions.
+      Say on WhatsApp "parents ko fee structure bhejo" and Bolo finds it here.</p></header>
+    <div class="grid2">
+      <div class="card"><h3>Add a file</h3><form id="kbFile" class="formgrid">
+        <label>Title<input name="title" required placeholder="Fee structure 2026"></label>
+        <label>For<select name="audience" class="rolesel"></select></label>
+        <label style="grid-column:1/-1">File (PDF / image)<input type="file" name="file" required accept="application/pdf,image/*"></label>
+        <div class="formactions"><button type="submit">Upload</button><span class="muted">Text is read with Sarvam Vision when a key is set.</span></div></form></div>
+      <div class="card"><h3>Add a fact</h3><form id="kbFact" class="formgrid">
+        <label>Title<input name="title" required placeholder="Timings"></label>
+        <label>For<select name="audience" class="rolesel"></select></label>
+        <label style="grid-column:1/-1">Text<textarea name="text" rows="3" required placeholder="Open 7 am to 10 pm. Free delivery above ₹300."></textarea></label>
+        <div class="formactions"><button type="submit">Save fact</button></div></form></div>
+    </div>
+    <div class="card"><table id="kbTable"></table></div>
+  </section>
+  <!-- Dashboard -->
+  <section id="v-dashboard" class="view hidden">
+    <header><div><h1 id="bizTitle">Today</h1><small class="muted" id="bizSub"></small></div><div class="actions"><a class="primary-action" href="#phone">Open phone simulator</a><button id="sendSummary" class="ghost">Send daily summary</button></div></header>
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="card"><h3>Who owes the most</h3><table id="topOwing"></table></div>
+      <div class="card"><h3>Promises &amp; disputes</h3><div id="claimsList"></div></div>
+    </div>
+    <div class="card"><h3>Summary the owner hears at night</h3><pre id="summaryText"></pre></div>
+  </section>
+
+  <!-- Phone simulator -->
+  <section id="v-phone" class="view hidden">
+    <header><div><h1>Phone simulator</h1><p class="muted" id="liveNote"></p></div></header>
+    <div class="phonewrap">
+      <div class="who" id="whoList" aria-label="Choose a sender"></div>
+      <div class="phone">
+        <div class="wa-status" aria-hidden="true"><span id="waClock">9:41</span><span>▂▄▆ 5G ▮</span></div>
+        <div class="phonehead" id="phoneHead">Pick a person</div>
+        <div class="chat" id="chat" aria-label="Conversation"></div>
+        <div class="composer">
+          <div class="wa-input">
+            <span class="wa-emoji" aria-hidden="true">☺</span>
+            <input id="msgInput" aria-label="Message" placeholder="Message" autocomplete="off">
+            <label class="iconbtn" title="Attach audio, a photo or a PDF">📎<input type="file" id="fileInput" aria-label="Attach a voice note, photo or PDF" accept="audio/*,image/*,application/pdf" class="file-input"></label>
+          </div>
+          <button id="sendBtn" class="wa-round" aria-label="Send">➤</button>
+          <button id="micBtn" class="wa-round" aria-label="Record voice note" title="Tap to record, tap again to send" aria-pressed="false">🎙️</button>
+        </div>
+        <div id="sendState" class="send-state" role="status"></div>
+        <details class="examples"><summary>Example messages</summary><div class="hints" id="hints"></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ledger -->
+  <section id="v-ledger" class="view hidden">
+    <header><h1>Khata</h1><div class="actions"><span id="chainBadge" class="pill"></span></div></header>
+    <div class="grid2">
+      <div class="card"><h3>Balances</h3><table id="balTable"></table></div>
+      <div class="card"><h3>Entries <small class="muted">(append-only · hash-chained · audio-backed)</small></h3><div id="entries" class="scroll"></div></div>
+    </div>
+  </section>
+
+  <!-- Polls -->
+  <section id="v-polls" class="view hidden">
+    <header><h1>Polls &amp; tasks</h1><p class="muted">Bolo asks each person privately, in their language, with buttons; nudges silent ones; escalates to a call.</p></header>
+    <div id="pollList"></div>
+  </section>
+
+  <!-- Approvals -->
+  <section id="v-approvals" class="view hidden">
+    <header><h1>Approvals</h1><p class="muted">Messages to many people, documents to outsiders, and large staff entries wait for the owner.</p></header>
+    <div id="approvalList"></div>
+  </section>
+
+  <!-- People -->
+  <section id="v-people" class="view hidden">
+    <header><h1>People &amp; roles</h1></header>
+    <div class="card">
+      <form id="personForm" class="formgrid">
+        <input type="hidden" name="id">
+        <label>Name<input name="name" required></label>
+        <label>WhatsApp number<input name="phone" placeholder="98xxxxxxxx"></label>
+        <label>Role<select name="role" class="rolesel"></select></label>
+        <label>Language<select name="lang" class="langsel"></select></label>
+        <label>Also called (comma separated)<input name="aliases" placeholder="Rameshanna, milk-wala"></label>
+        <label>Short note (shown on buttons)<input name="note" placeholder="milk-wala / 3rd cross"></label>
+        <label>Credit limit ₹<input name="credit_limit" type="number" min="0"></label>
+        <label>Replies (Voice Passport)<select name="reply_mode"><option value="both">Voice + text</option>
+          <option value="voice">Voice first (low literacy / blind)</option><option value="text">Text only (deaf / prefers reading)</option></select></label>
+        <label class="check"><input type="checkbox" name="opted_in" value="1"> Opted in to WhatsApp messages</label>
+        <div class="formactions"><button type="submit">Save person</button><button type="reset" class="ghost">Clear</button></div>
+      </form>
+    </div>
+    <div class="card"><table id="peopleTable"></table></div>
+    <div class="card"><h3>What each role can do</h3><table class="roles">
+      <tr><th>Role</th><th>Can</th><th>Can't</th></tr>
+      <tr><td>Owner</td><td>Everything; approves risky actions</td><td>—</td></tr>
+      <tr><td>Staff</td><td>Add credit/payments, ask people, send tasks, reminders</td><td>Large amounts without approval, partner reports</td></tr>
+      <tr><td>Partner</td><td>Balances, daily summary</td><td>Add entries</td></tr>
+      <tr><td>Delivery / Supplier</td><td>Answer tasks &amp; polls</td><td>See money</td></tr>
+      <tr><td>Customer</td><td>Own balance, agree / promise / dispute / pay, order</td><td>See others</td></tr>
+    </table></div>
+  </section>
+
+  <!-- Products -->
+  <section id="v-products" class="view hidden">
+    <header><h1>Products</h1><p class="muted">Names and local names here also tune speech recognition (Sarvam keyterms).</p></header>
+    <div class="card"><form id="productForm" class="formgrid">
+      <input type="hidden" name="id">
+      <label>Name<input name="name" required></label>
+      <label>Local names (comma separated)<input name="aliases" placeholder="hittu, aata"></label>
+      <label>Unit<input name="unit" placeholder="kg / pack"></label>
+      <label>Price ₹<input name="price" type="number" step="0.01"></label>
+      <div class="formactions"><button type="submit">Save product</button></div>
+    </form></div>
+    <div class="card"><table id="productTable"></table></div>
+  </section>
+
+  <!-- Templates -->
+  <section id="v-templates" class="view hidden">
+    <header><h1>Templates</h1><p class="muted">Bills, quotations, purchase orders and statements Bolo fills from a voice note. Owners can also send a photo of their own format on WhatsApp.</p></header>
+    <div class="grid2">
+      <div class="card"><select id="tmplPick"></select><textarea id="tmplHtml" spellcheck="false"></textarea>
+        <div class="formactions"><button id="tmplSave">Save template</button><span class="muted">Placeholders: {{shop_name}} {{shop_header}} {{to_name}} {{date}} {{doc_no}} {{items_table}} {{total}} {{note}}</span></div></div>
+      <div class="card"><iframe id="tmplPreview" title="Document template preview" sandbox></iframe></div>
+    </div>
+  </section>
+
+  <!-- Settings -->
+  <section id="v-settings" class="view hidden">
+    <header><h1>Settings</h1></header>
+    <div class="card"><form id="settingsForm" class="formgrid">
+      <label>Shop name<input name="shop_name"></label>
+      <label>Owner WhatsApp number<input name="owner_phone"></label>
+      <label>Owner language<select name="owner_lang" class="langsel"></select></label>
+      <label>UPI ID (for Pay now)<input name="upi_id" placeholder="shop@upi"></label>
+      <label>Confirm money entries<select name="confirm_money"><option value="always">Always (one tap)</option><option value="risky">Only when risky</option></select></label>
+      <label>Read back amounts from ₹<input name="readback_amount" type="number"></label>
+      <label>Staff entries need approval from ₹<input name="big_amount" type="number"></label>
+      <label>Owner approves messages to more than<input name="fanout_approval" type="number"></label>
+      <label>Nudge silent people after (min)<input name="nudge_after_min" type="number"></label>
+      <label>Call them after (min)<input name="call_after_min" type="number"></label>
+      <label>Daily summary time<input name="summary_time" type="time"></label>
+      <label>Voice replies<select name="voice_replies"><option value="1">On</option><option value="0">Off (text only)</option></select></label>
+      <label>Customer loop (statements, agree/dispute)<select name="customer_loop"><option value="1">On</option><option value="0">Off</option></select></label>
+      <div class="formactions"><button type="submit">Save settings</button></div>
+    </form></div>
+    <div class="card"><h3>Connections</h3><table id="connTable"></table><p class="muted">Keys live in <code>.env</code> on the server. Missing keys fall back automatically (see docs/ai-stack.md).</p></div>
+    <div class="card"><button id="resetBtn" class="ghost">Archive shop and start fresh</button></div>
+  </section>
+
+  <!-- Activity -->
+  <section id="v-activity" class="view hidden">
+    <header><h1>Activity</h1><p class="muted">Every action, who triggered it, and when.</p></header>
+    <div class="card"><table id="auditTable"></table></div>
+  </section>
+</main>
+<div id="toast" role="status" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>

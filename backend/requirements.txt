@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+httpx
+python-dotenv
+python-multipart
+rapidfuzz
+indic-transliteration
+google-genai
+openai
+qrcode
+pillow
+reportlab>=4.4,<5
+imageio-ffmpeg
+espeakng-loader
+faster-whisper

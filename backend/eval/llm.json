@@ -1,0 +1,333 @@
+{
+  "mode": "llm",
+  "model": null,
+  "notes": 15,
+  "totals": {
+    "amount": {
+      "correct": 11,
+      "eligible": 12
+    },
+    "name": {
+      "correct": 15,
+      "eligible": 15
+    },
+    "action": {
+      "correct": 15,
+      "eligible": 15
+    }
+  },
+  "results": [
+    {
+      "id": "hi01",
+      "transcript": "फ़ातिमा ने पचास रुपये का सामान लिया।",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Fatima",
+            "amount": 50
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi02",
+      "transcript": "सेल्वी ने पचहत्तर रुपये दिए।",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Selvi",
+            "amount": 75
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi03",
+      "transcript": "रमेश कुमार ने साढ़े तीन सौ रुपये का सामान लिया।",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Ramesh Kumar",
+            "amount": 350
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi04",
+      "transcript": "लक्ष्मी ने दो सौ रुपये दिए।",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Lakshmi",
+            "amount": 200
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi05",
+      "transcript": "फ़ातिमा का कितना बाकी है?",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "query_balance",
+          "args": {
+            "name": "Fatima"
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": null
+      }
+    },
+    {
+      "id": "kn01",
+      "transcript": "ಲಕ್ಷ್ಮಿ ಐವತ್ತು ರೂಪಾಯಿ ಕೊಟ್ಟಳು.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Lakshmi",
+            "amount": 50
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "kn02",
+      "transcript": "ಫಾತಿಮಾ ಎಪ್ಪತ್ತು ರೂಪಾಯಿ ಸಾಲ ತೆಗೆದುಕೊಂಡರು.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Fatima",
+            "amount": 70
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "kn03",
+      "transcript": "ಸೆಲ್ವಿ ಎರಡು ನೂರು ರೂಪಾಯಿ ಕೊಟ್ಟರು.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Selvi",
+            "amount": 200
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "kn04",
+      "transcript": "ರಮೇಶ್ ಕುಮಾರ್ ನೂರು ರೂಪಾಯಿ ಸಾಲ ತೆಗೆದುಕೊಂಡರು.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Ramesh Kumar",
+            "amount": 100
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "kn05",
+      "transcript": "ಲಕ್ಷ್ಮಿ ಎಷ್ಟು ಬಾಕಿ?",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "query_balance",
+          "args": {
+            "name": "Lakshmi"
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": null
+      }
+    },
+    {
+      "id": "mix01",
+      "transcript": "Fatima ne fifty rupees ka saman liya.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Fatima",
+            "amount": 50
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "mix02",
+      "transcript": "Lakshmi ne two hundred rupees paid.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Lakshmi",
+            "amount": 200
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "mix03",
+      "transcript": "Selvi ne pachattar rupees diye.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Selvi",
+            "amount": 55
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix04",
+      "transcript": "Ramesh Kumar ne chaar sau pachaas ka credit liya.",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Ramesh Kumar",
+            "amount": 450
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "mix05",
+      "transcript": "Fatima ka balance kitna hai?",
+      "alternate": "",
+      "engines": [],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "query_balance",
+          "args": {
+            "name": "Fatima"
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+id,language,voice,snr_db,reference,action,name,amount
+hi01,Hindi,hi-IN,,फ़ातिमा ने पचास रुपये का सामान लिया।,add_credit,Fatima,50
+hi02,Hindi,hi-IN,,सेल्वी ने पचहत्तर रुपये दिए।,record_payment,Selvi,75
+hi03,Hindi,hi-IN,12,रमेश कुमार ने साढ़े तीन सौ रुपये का सामान लिया।,add_credit,Ramesh Kumar,350
+hi04,Hindi,hi-IN,,लक्ष्मी ने दो सौ रुपये दिए।,record_payment,Lakshmi,200
+hi05,Hindi,hi-IN,,फ़ातिमा का कितना बाकी है?,query_balance,Fatima,
+kn01,Kannada,kn-IN,,ಲಕ್ಷ್ಮಿ ಐವತ್ತು ರೂಪಾಯಿ ಕೊಟ್ಟಳು.,record_payment,Lakshmi,50
+kn02,Kannada,kn-IN,,ಫಾತಿಮಾ ಎಪ್ಪತ್ತು ರೂಪಾಯಿ ಸಾಲ ತೆಗೆದುಕೊಂಡರು.,add_credit,Fatima,70
+kn03,Kannada,kn-IN,12,ಸೆಲ್ವಿ ಎರಡು ನೂರು ರೂಪಾಯಿ ಕೊಟ್ಟರು.,record_payment,Selvi,200
+kn04,Kannada,kn-IN,,ರಮೇಶ್ ಕುಮಾರ್ ನೂರು ರೂಪಾಯಿ ಸಾಲ ತೆಗೆದುಕೊಂಡರು.,add_credit,Ramesh Kumar,100
+kn05,Kannada,kn-IN,,ಲಕ್ಷ್ಮಿ ಎಷ್ಟು ಬಾಕಿ?,query_balance,Lakshmi,
+mix01,Hinglish,hi-IN,,Fatima ne fifty rupees ka saman liya.,add_credit,Fatima,50
+mix02,Hinglish,hi-IN,,Lakshmi ne two hundred rupees paid.,record_payment,Lakshmi,200
+mix03,Hinglish,hi-IN,12,Selvi ne pachattar rupees diye.,record_payment,Selvi,75
+mix04,Hinglish,hi-IN,,Ramesh Kumar ne chaar sau pachaas ka credit liya.,add_credit,Ramesh Kumar,450
+mix05,Hinglish,hi-IN,,Fatima ka balance kitna hai?,query_balance,Fatima,

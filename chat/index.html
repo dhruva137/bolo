@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#008069">
+<title>Chats</title>
+<style>
+/* Bolo Chat: a WhatsApp-style messenger for the shop's customers, staff and suppliers.
+   Look-alike styling only (colours, bubbles, layout); no WhatsApp logo or artwork. */
+:root{--bg:#efeae2;--in:#d9fdd3;--out:#fff;--head:#008069;--ink:#111b21;--sub:#667781;--tick:#53bdeb;--btn:#027eb5;--bar:#f0f2f5;--green:#00a884}
+@media (prefers-color-scheme:dark){:root{--bg:#0b141a;--in:#005c4b;--out:#202c33;--head:#202c33;--ink:#e9edef;--sub:#8696a0;--btn:#53bdeb;--bar:#202c33}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.35 "Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{display:flex;justify-content:center}
+.app{width:100%;max-width:520px;height:100dvh;display:flex;flex-direction:column;background:var(--bg);box-shadow:0 0 30px #0002;position:relative}
+.hidden{display:none!important}
+.side{display:none}
+@media (min-width:900px){
+  body{background:#d1d7db}
+  @media (prefers-color-scheme:dark){body{background:#0c1317}}
+  .app{max-width:1600px;height:100dvh;flex-direction:row;box-shadow:none}
+  .side{display:flex;flex-direction:column;width:min(30%,420px);min-width:320px;border-right:1px solid #8696a033;background:var(--out)}
+  .side .shead{background:var(--bar);display:flex;align-items:center;gap:10px;padding:10px 16px;height:59px}
+  .side .shead .me{width:40px;height:40px;border-radius:50%;background:#dfe5e7;color:#54656f;display:grid;place-items:center;font-weight:700}
+  .side .shead b{flex:1;font-size:16px}.side .shead span{color:var(--sub);font-size:18px}
+  .side .search{padding:8px 12px;border-bottom:1px solid #8696a022}.side .search div{background:var(--bar);border-radius:8px;padding:8px 14px;color:var(--sub);font-size:14px}
+  .side .item{display:flex;gap:12px;align-items:center;padding:10px 14px;cursor:pointer;border-bottom:1px solid #8696a01a}
+  .side .item.on,.side .item:hover{background:#8696a01a}
+  .side .label{padding:12px 16px 4px;color:var(--green);font-size:12px;font-weight:600;letter-spacing:.04em}
+  #chatList{overflow-y:auto;flex:1}
+  .side .item .avatar{width:49px;height:49px}
+  .side .item .t{flex:1;min-width:0}.side .item .t b{display:block;font-weight:500;font-size:16px}
+  .side .item .t small{display:block;color:var(--sub);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side .item time{color:var(--green);font-size:12px;align-self:flex-start;margin-top:4px}
+  #chatView{flex:1}
+  .top{background:var(--bar);color:var(--ink);height:59px}.top .back{display:none}.top .dots{color:var(--sub)}.top .icons{color:var(--sub)}
+  .join{flex:1;align-items:center;justify-content:center;background:transparent}
+  .join>*{width:100%;max-width:520px}.join header{border-radius:10px 10px 0 0}.join form,.join .demo{background:var(--out)}.join .demo{border-radius:0 0 10px 10px;padding-top:4px}
+  .wrap{max-width:65%}
+}
+/* join screen */
+.join{flex:1;display:flex;flex-direction:column;background:var(--bar)}
+.join header{background:var(--head);color:#fff;padding:28px 20px 22px}
+.join header h1{margin:0;font-size:22px;font-weight:600}.join header p{margin:6px 0 0;opacity:.9;font-size:14px}
+.join form{padding:20px;display:flex;flex-direction:column;gap:14px}
+.join label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--sub)}
+.join input{font:inherit;font-size:17px;padding:12px;border:0;border-bottom:2px solid var(--green);background:transparent;color:var(--ink);outline:none}
+.join .cc{display:flex;gap:8px;align-items:end}.join .cc span{padding:12px 4px;border-bottom:2px solid var(--green);font-size:17px}
+.join button{background:var(--green);color:#fff;border:0;border-radius:24px;padding:12px;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
+.join .demo{padding:0 20px 20px}.join .demo p{font-size:13px;color:var(--sub);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{background:var(--out);color:var(--ink);border:1px solid #8696a055;border-radius:18px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.err{color:#e53935;font-size:13px;min-height:1em}
+.bar.view #mic,.bar.view .clip{display:none!important}.bar.view #send{display:block!important}
+@media (max-width:899px){.side.open{display:flex!important;position:fixed;inset:0;z-index:9;flex-direction:column;background:var(--out)}
+  .side .shead{background:var(--head);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px}.side .search{display:none}
+  .side .item{display:flex;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid #8696a01a}.side .item .t{flex:1;min-width:0}
+  .side .item .t small{display:block;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side .label{padding:10px 14px 2px;color:var(--green);font-size:12px;font-weight:600}}
+.tabs{display:flex;background:var(--head)}.tabs button{flex:1;background:none;border:0;color:#ffffffb3;font:inherit;font-weight:600;padding:12px;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button.on{color:#fff;border-bottom-color:#fff}
+.join select{font:inherit;font-size:16px;padding:10px;border:0;border-bottom:2px solid var(--green);background:transparent;color:var(--ink)}
+.join select option{color:#111}
+.check{flex-direction:row!important;align-items:center;gap:8px!important;color:var(--ink)!important;font-size:14px!important}
+.menu{position:absolute;right:8px;top:58px;background:var(--out);color:var(--ink);border-radius:8px;box-shadow:0 4px 20px #0004;padding:12px;z-index:5;width:280px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.menu select{font:inherit;padding:8px;border-radius:6px;border:1px solid #8696a055;background:var(--bar);color:var(--ink)}
+.menu label.check{color:var(--ink)!important;font-size:13.5px!important}
+.menu a{color:var(--btn);text-decoration:none;font-weight:600}
+.meter{flex:1;height:8px;border-radius:4px;background:#8696a033;overflow:hidden}.meter i{display:block;height:100%;width:0;background:#00a884;transition:width .08s}
+.dots{background:none;border:0;color:#fff;font-size:20px;cursor:pointer;padding:0 4px}
+/* chat screen */
+.top{background:var(--head);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top))}
+.back{background:none;border:0;color:#fff;font-size:26px;line-height:1;padding:0 2px;cursor:pointer}
+.avatar{width:40px;height:40px;border-radius:50%;background:#25d366;color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.title{flex:1;min-width:0;display:flex;flex-direction:column}
+.title b{font-size:16.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title small{font-size:12.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icons{white-space:nowrap;font-size:17px;opacity:.95}
+.chat{flex:1;overflow-y:auto;padding:10px 12px 6px;display:flex;flex-direction:column;gap:2px;background-color:var(--bg);
+  background-image:radial-gradient(circle at 20px 20px,#8881 2px,transparent 3px),radial-gradient(circle at 60px 50px,#8881 3px,transparent 4px),radial-gradient(circle at 40px 82px,#8881 1.5px,transparent 2.5px);background-size:90px 100px}
+.sys{align-self:center;background:#ffeecd;color:#54656f;font-size:12.5px;padding:6px 10px;border-radius:8px;text-align:center;max-width:88%;margin:6px 0}
+@media (prefers-color-scheme:dark){.sys{background:#182229;color:#ffd279}}
+.wrap{display:flex;flex-direction:column;max-width:84%;margin-top:4px}
+.wrap.in{align-self:flex-end}.wrap.out{align-self:flex-start}
+.msg{position:relative;padding:6px 8px 8px 9px;border-radius:8px;box-shadow:0 1px .5px #0b141a21;white-space:pre-wrap;word-wrap:break-word;font-size:14.6px;line-height:19.5px}
+.msg.in{background:var(--in);border-top-right-radius:0}.msg.out{background:var(--out);border-top-left-radius:0}
+.msg::after{content:"";position:absolute;top:0;width:8px;height:13px}
+.msg.in::after{right:-8px;background:var(--in);clip-path:polygon(0 0,100% 0,0 100%)}
+.msg.out::after{left:-8px;background:var(--out);clip-path:polygon(0 0,100% 0,100% 100%)}
+.stamp{display:block;text-align:right;color:var(--sub);font-size:11px;margin:2px -2px -4px 12px;line-height:15px}
+.ticks{color:var(--tick);letter-spacing:-3px;margin-left:3px}
+.btns{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.btns button{background:var(--out);color:var(--btn);border:0;border-radius:8px;box-shadow:0 1px .5px #0b141a21;padding:10px;font:inherit;font-weight:500;cursor:pointer}
+.btns button:disabled{opacity:.55}
+.vn{display:flex;align-items:center;gap:8px;min-width:220px;padding:4px 0}
+.vn-play{background:none;border:0;color:var(--sub);font-size:22px;width:32px;cursor:pointer;padding:0}
+.bars{position:relative;display:flex;align-items:center;gap:2px;height:28px;flex:1}
+.bars i{display:block;width:3px;border-radius:2px;background:#8696a080;flex:none}
+.fill{position:absolute;inset:0 auto 0 0;width:0;overflow:hidden;display:flex;align-items:center;gap:2px}.fill i{background:#34b7f1}
+.dur{font-size:11px;color:var(--sub);min-width:30px;text-align:right}
+.heard{font-size:12.5px;color:var(--sub);font-style:italic;margin-top:2px}
+.doc{display:flex;gap:10px;align-items:center;background:#8696a01f;border-radius:6px;padding:10px;text-decoration:none;color:var(--ink);margin-bottom:4px}
+.doc .ico{background:#e53935;color:#fff;font-size:10px;font-weight:700;border-radius:3px;padding:8px 5px}
+.doc small{display:block;color:var(--sub);font-size:11px}
+.typing{align-self:flex-start;background:var(--out);border-radius:8px;padding:8px 12px;margin-top:4px;color:var(--sub);font-size:13px}
+.bar{background:var(--bar);display:flex;align-items:flex-end;gap:6px;padding:6px 8px;padding-bottom:max(6px,env(safe-area-inset-bottom))}
+.field{flex:1;display:flex;align-items:center;gap:6px;background:var(--out);border-radius:24px;padding:3px 12px;min-height:46px}
+.field input[type=text]{flex:1;border:0;background:transparent;outline:none;color:var(--ink);font:inherit;font-size:16px;padding:9px 2px}
+.emoji,.clip{color:var(--sub);font-size:20px;cursor:pointer}
+.clip input{display:none}
+.round{width:46px;height:46px;border-radius:50%;border:0;background:var(--green);color:#fff;font-size:19px;flex:none;cursor:pointer}
+.bar:has(#text:placeholder-shown) #send{display:none}
+.bar:not(:has(#text:placeholder-shown)) #mic{display:none}
+#mic.rec{background:#e53935;animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px #e5393533}}
+.recinfo{flex:1;display:flex;align-items:center;gap:10px;background:var(--out);border-radius:24px;padding:0 14px;min-height:46px;color:#e53935;font-weight:600}
+.recinfo button{margin-left:auto;background:none;border:0;color:var(--sub);font:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Join: the person says who they are, like opening a chat with the shop -->
+  <section class="join" id="join">
+    <header><h1>Chats</h1><p id="shopLine">Enter your phone number to start. Send a voice note in your language.</p></header>
+    <div class="tabs"><button type="button" id="tabCust" class="on">I'm a customer</button><button type="button" id="tabBiz">I run a business</button></div>
+    <form id="bizForm" class="hidden" autocomplete="on">
+      <label>Business name<input id="bName" required placeholder="e.g. Lakshmi Stores" maxlength="60"></label>
+      <label>Type of business<select id="bType"></select></label>
+      <label>Your language<select id="bLang"><option value="kn-IN">ಕನ್ನಡ Kannada</option><option value="hi-IN">हिंदी Hindi</option><option value="en-IN">English</option><option value="ta-IN">தமிழ் Tamil</option><option value="te-IN">తెలుగు Telugu</option></select></label>
+      <label>Your mobile (owner)<span class="cc"><span>+91</span><input id="bPhone" required inputmode="numeric" pattern="[0-9]{10}" placeholder="10-digit mobile" maxlength="10" style="flex:1"></span></label>
+      <label class="check"><input type="checkbox" id="bFresh" checked> Start a fresh book with sample customers (for the demo)</label>
+      <div class="err" id="bErr"></div>
+      <button type="submit">Open my business</button>
+    </form>
+    <form id="joinForm" autocomplete="on">
+      <label>Your name<input id="jName" required placeholder="e.g. Ramesh" maxlength="40"></label>
+      <label>Your phone number<span class="cc"><span>+91</span><input id="jPhone" required inputmode="numeric" pattern="[0-9]{10}" placeholder="10-digit mobile" maxlength="10" style="flex:1"></span></label>
+      <div class="err" id="jErr"></div>
+      <button type="submit">Start chat</button>
+    </form>
+    <div class="demo" id="demoPeople"><p>Demo: continue as someone already in the shop's book</p><div class="chips" id="people"></div></div>
+  </section>
+
+  <!-- Desktop chat list (WhatsApp-Web-style left pane) -->
+  <aside class="side hidden" id="side">
+    <div class="shead"><span class="me" id="meAvatar">?</span><b id="meName"></b><span aria-hidden="true">⟳ &nbsp;💬 &nbsp;⋮</span></div>
+    <div class="search"><div>🔍 Search or start new chat</div></div>
+    <div id="chatList"><div class="item on" data-open="self"><span class="avatar" id="sideAvatar">B</span><span class="t"><b id="sideName">Shop</b><small id="sidePreview">Tap to chat</small></span><time id="sideTime"></time></div></div>
+  </aside>
+  <!-- Chat -->
+  <section class="hidden" id="chatView" style="flex:1;display:flex;flex-direction:column;min-height:0">
+    <div class="top">
+      <button class="back" id="leave" aria-label="Switch person">‹</button>
+      <span class="avatar" id="shopAvatar">B</span>
+      <span class="title"><b id="shopName">Bolo</b><small id="sub">online</small></span>
+      <span class="icons" aria-hidden="true">📹&nbsp;&nbsp;📞</span><button class="dots" id="dots" aria-label="Menu">⋮</button>
+    </div>
+    <div class="menu hidden" id="menu">
+      <label>🎙️ Microphone<select id="micSel"><option value="">System default</option></select></label>
+      <div id="bizSettings" class="hidden">
+        <b>⚙️ Customise your bot</b>
+        <label class="check"><input type="checkbox" id="sConfirm"> Ask customers to confirm orders</label>
+        <label>Order ready time<input id="sEta" placeholder="30 min" maxlength="30" style="font:inherit;padding:8px;border-radius:6px;border:1px solid #8696a055;background:var(--bar);color:var(--ink)"></label>
+        <div id="featList" style="display:flex;flex-direction:column;gap:6px;max-height:240px;overflow:auto"></div>
+      </div>
+      <a href="/console/" target="_blank" id="dashLink">📊 Open the business dashboard ↗</a>
+      <a href="#" id="switchUser">↩︎ Switch person</a>
+    </div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <div class="bar" id="bar">
+      <div class="field" id="field">
+        <span class="emoji" aria-hidden="true">☺</span>
+        <input type="text" id="text" placeholder="Message" autocomplete="off" aria-label="Message">
+        <label class="clip" title="Send a photo or PDF">📎<input type="file" id="file" accept="image/*,application/pdf,audio/*"></label>
+      </div>
+      <div class="recinfo hidden" id="recinfo">● <span id="rectime">0:00</span><span class="meter"><i id="level"></i></span><button type="button" id="cancelRec">Cancel</button></div>
+      <button class="round" id="send" aria-label="Send">➤</button>
+      <button class="round" id="mic" aria-label="Record a voice note">🎙️</button>
+    </div>
+  </section>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = { get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+async function api(path, opts = {}) {
+  const init = { method: opts.method || "GET", headers: {} };
+  if (opts.body instanceof FormData) init.body = opts.body;
+  else if (opts.body) { init.body = JSON.stringify(opts.body); init.headers["Content-Type"] = "application/json"; }
+  const r = await fetch(path, init);
+  if (!r.ok) { let m = r.statusText; try { m = (await r.json()).detail || m; } catch {} throw new Error(m); }
+  return r.json();
+}
+
+// Customer side = /chat/ (port 8001). Business side = /business (port 8002): login, every chat log, the assistant.
+const BIZ_PAGE = location.pathname.startsWith("/business");
+const ME_KEY = BIZ_PAGE ? "bolo-biz-me" : "bolo-chat-me";
+let me = store.get(ME_KEY), lastId = 0, busy = false, SHOP = "the shop", viewing = null;
+const labels = {}, seen = new Set();
+
+// ---------- join
+async function loadShop() {
+  try {
+    const p = await api("/api/profile");
+    SHOP = p.name || "the shop";
+    $("#shopName").textContent = p.name || "Bolo";
+    $("#bType").innerHTML = Object.entries(p.types || {kirana: "Kirana / grocery shop"}).map(([k, v]) => `<option value="${esc(k)}" ${k === p.type ? "selected" : ""}>${esc(v)}</option>`).join("");
+    $("#shopAvatar").textContent = (p.name || "B").trim()[0].toUpperCase();
+    $("#shopLine").textContent = `Chat with ${p.name || "the shop"}. Send a voice note in your language.`;
+    document.title = p.name || "Chats";
+  } catch {}
+  try {
+    const people = await api("/api/contacts");
+    const list = (Array.isArray(people) ? people : people.contacts || []).filter((c) => c.phone);
+    $("#people").innerHTML = list.slice(0, 12).map((c) => `<button type="button" data-p="${esc(c.phone)}" data-n="${esc(c.name)}">${esc(c.name)} · ${esc(c.role)}</button>`).join("");
+    document.querySelectorAll("#people button").forEach((b) => (b.onclick = () => start(b.dataset.n, b.dataset.p)));
+  } catch {}
+}
+$("#joinForm").onsubmit = (e) => {
+  e.preventDefault();
+  const digits = $("#jPhone").value.replace(/\D/g, "");
+  if (digits.length !== 10) { $("#jErr").textContent = "Enter a 10-digit mobile number."; return; }
+  start($("#jName").value.trim(), "91" + digits);
+};
+// Two portals: customers (/chat/) and the business owner (/chat/#business).
+function tab(biz) {
+  $("#tabBiz").classList.toggle("on", biz); $("#tabCust").classList.toggle("on", !biz);
+  $("#bizForm").classList.toggle("hidden", !biz); $("#joinForm").classList.toggle("hidden", biz); $("#demoPeople").classList.toggle("hidden", biz);
+  history.replaceState(null, "", biz ? "#business" : "#");
+}
+$("#tabBiz").onclick = () => tab(true); $("#tabCust").onclick = () => tab(false);
+$("#bizForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const digits = $("#bPhone").value.replace(/\D/g, ""), name = $("#bName").value.trim(), type = $("#bType").value;
+  if (digits.length !== 10) { $("#bErr").textContent = "Enter a 10-digit mobile number."; return; }
+  $("#bErr").textContent = "Setting up your business…";
+  try {
+    if ($("#bFresh").checked) {
+      await api("/api/reset", { method: "POST" });
+      await api(`/api/seed?kind=${type === "school" ? "school" : "kirana"}`, { method: "POST" });
+    }
+    await api("/api/onboard", { method: "POST", body: { name, type, owner_phone: "91" + digits, owner_lang: $("#bLang").value } });
+    $("#bErr").textContent = "";
+    await loadShop();
+    start(name, "91" + digits, "owner");
+  } catch (err) { $("#bErr").textContent = "Could not set up: " + err.message; }
+};
+function start(name, phone, role = "customer") {
+  me = { name, phone, role }; store.set(ME_KEY, me);
+  viewing = phone; lastId = 0; seen.clear(); $("#chat").innerHTML = ""; $("#bar").classList.remove("view");
+  $("#join").classList.add("hidden"); $("#chatView").classList.remove("hidden"); $("#side").classList.remove("hidden");
+  $("#meAvatar").textContent = (name.trim()[0] || "?").toUpperCase(); $("#meName").textContent = name;
+  if (role === "owner") {
+    $("#shopName").textContent = "Assistant · " + SHOP; $("#shopAvatar").textContent = "A";
+    sys(`👋 ${SHOP}: talk to Bolo like a helper. Try a voice note: "Ramesh chaar sau pachaas ka saman liya, Shanivar dega" or "kaun kaun ka kitna baaki hai".`);
+  } else {
+    $("#shopName").textContent = SHOP; $("#shopAvatar").textContent = (SHOP.trim()[0] || "B").toUpperCase();
+    sys("🎙️ Send a voice note in any language: Hindi, Kannada, Tamil, English… The shop's assistant replies here.");
+  }
+  subline();
+  $("#sideName").textContent = $("#shopName").textContent; $("#sideAvatar").textContent = $("#shopAvatar").textContent;
+  $("#bizSettings").classList.toggle("hidden", role !== "owner"); $("#dashLink").classList.toggle("hidden", role !== "owner");
+  loadThreads(); poll();
+}
+// Business side: open the assistant chat ("self") or any customer's live chat log.
+function openChat(phone, title, av) {
+  viewing = phone; lastId = 0; seen.clear(); $("#chat").innerHTML = ""; $("#side").classList.remove("open");
+  document.querySelectorAll("#chatList .item").forEach((i) => i.classList.toggle("on", i.dataset.open === (phone === me.phone ? "self" : phone)));
+  const self = phone === me.phone;
+  $("#shopName").textContent = self ? "Assistant · " + SHOP : title; $("#shopAvatar").textContent = self ? "A" : av;
+  $("#bar").classList.toggle("view", !self);
+  $("#text").placeholder = self ? "Message" : "Reply as the business…";
+  if (!self) sys(`📜 Live chat log with ${title}. Bolo answers automatically; you can step in and reply as the business.`);
+  subline(); poll();
+}
+async function loadThreads() {
+  if (!BIZ_PAGE || !me) return;
+  let t; try { t = await api("/api/live/threads"); } catch { return; }
+  const rows = (t.threads || []).filter((x) => x.phone !== me.phone);
+  const first = (x) => esc((x || "").split(String.fromCharCode(10))[0]);
+  $("#chatList").innerHTML = `<div class="item ${viewing === me.phone ? "on" : ""}" data-open="self"><span class="avatar">A</span><span class="t"><b>Assistant · ${esc(SHOP)}</b><small>Talk to Bolo: entries, orders, reminders</small></span></div>
+    <div class="label">CUSTOMER &amp; TEAM CHATS · LIVE</div>` + rows.map((x) => `<div class="item ${viewing === x.phone ? "on" : ""}" data-open="${esc(x.phone)}" data-name="${esc(x.name)}">
+      <span class="avatar">${esc((x.name || "?")[0].toUpperCase())}</span><span class="t"><b>${esc(x.name)} <small style="display:inline;color:var(--sub)">· ${esc(x.role_label || x.role)}</small></b>
+      <small>${x.kind === "voice" ? "🎙️ " : ""}${first(x.last)}</small></span><time>${hm(x.at)}</time></div>`).join("");
+}
+$("#chatList").addEventListener("click", (e) => {
+  const it = e.target.closest(".item"); if (!it || !me || !BIZ_PAGE) return;
+  if (it.dataset.open === "self") openChat(me.phone); else openChat(it.dataset.open, it.dataset.name, (it.dataset.name || "?")[0].toUpperCase());
+});
+setInterval(loadThreads, 3000);
+function subline() {
+  if (me && BIZ_PAGE && viewing && viewing !== me.phone) { $("#sub").textContent = "live chat log · handled by Bolo"; return; } if (me) $("#sub").textContent = me.role === "owner" ? `owner of ${SHOP} · +${me.phone.slice(2)}` : `you are ${me.name} · +${me.phone.slice(2)}`; }
+$("#dots").onclick = () => { $("#menu").classList.toggle("hidden"); listMics(); if (me?.role === "owner") loadBizSettings(); };
+// Business-side customisation: features on/off and order behaviour, saved on the server for every customer.
+async function loadBizSettings() {
+  try {
+    const [p, st] = await Promise.all([api("/api/profile"), api("/api/settings")]);
+    $("#sConfirm").checked = st.order_confirm !== "0"; $("#sEta").value = st.order_eta || "";
+    $("#featList").innerHTML = Object.entries(p.all_features || {}).filter(([, f]) => !f.core)
+      .map(([k, f]) => `<label class="check" title="${esc(f.desc)}"><input type="checkbox" data-f="${esc(k)}" ${p.features.includes(k) ? "checked" : ""}> ${esc(f.label)}</label>`).join("");
+    document.querySelectorAll("#featList input").forEach((i) => (i.onchange = () => api(`/api/features/${i.dataset.f}`, { method: "PUT", body: { on: i.checked } })));
+  } catch {}
+}
+$("#sConfirm").onchange = () => api("/api/settings", { method: "PUT", body: { order_confirm: $("#sConfirm").checked ? "1" : "0" } });
+$("#sEta").onchange = () => api("/api/settings", { method: "PUT", body: { order_eta: $("#sEta").value.trim() } });
+$("#switchUser").onclick = (e) => { e.preventDefault(); $("#menu").classList.add("hidden"); $("#leave").click(); };
+$("#leave").onclick = () => {
+  if (BIZ_PAGE && me && window.innerWidth < 900) { $("#side").classList.toggle("open"); return; }
+  me = null; store.set(ME_KEY, null); $("#chatView").classList.add("hidden"); $("#side").classList.add("hidden"); $("#join").classList.remove("hidden"); };
+
+// ---------- rendering
+const hm = (t) => new Date(t * 1000).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+const waText = (t) => esc(t).replace(/\*([^*\n]+)\*/g, "<b>$1</b>");
+function sys(t) { $("#chat").insertAdjacentHTML("beforeend", `<div class="sys">${esc(t)}</div>`); }
+function voice(src, seed) {
+  let x = Number(seed) || 7, b = "";
+  for (let i = 0; i < 30; i++) { x = (x * 9301 + 49297) % 233280; b += `<i style="height:${6 + Math.round(x / 233280 * 18)}px"></i>`; }
+  return `<div class="vn"><button class="vn-play" data-src="${esc(src)}" aria-label="Play voice note">▶</button><div class="bars">${b}<div class="fill">${b}</div></div><span class="dur">🎙️</span></div>`;
+}
+function bubble(m) {
+  const own = !me || viewing === me.phone;
+  const cls = (own ? m.direction === "in" : m.direction === "out") ? "in" : "out";
+  (m.buttons || []).forEach(([id, t]) => (labels[id] = t));
+  let body = waText(m.text);
+  if (m.kind === "voice" && m.media) body = voice(m.media, m.id) + (m.text && m.direction === "in" ? `<div class="heard">📝 “${esc(m.text)}”</div>` : "");
+  if (m.kind === "document" && m.media) body = `<a class="doc" href="${esc(m.media)}" target="_blank"><span class="ico">PDF</span><span><b>${esc(m.meta?.filename || "Document")}</b><small>PDF · tap to open</small></span></a>${m.text ? waText(m.text) : ""}`;
+  if (m.kind === "media" && m.direction === "in") body = "📷 Photo / document";
+  if (m.kind === "button" && m.direction === "in") body = `↩︎ ${esc(labels[m.text] || m.text)}`;
+  const btns = (m.buttons || []).length ? `<div class="btns">${m.buttons.map(([id, t]) => `<button data-b="${esc(id)}" ${own ? "" : "disabled"}>${esc(t)}</button>`).join("")}</div>` : "";
+  if (m.meta?.human) body += '<div class="heard">👤 sent by the business</div>';
+  return `<div class="wrap ${cls}"><div class="msg ${cls}">${body}<span class="stamp">${hm(m.created_at)}${cls === "in" ? '<span class="ticks">✓✓</span>' : ""}</span></div>${btns}</div>`;
+}
+async function poll() {
+  if (!me) return;
+  const phone = viewing || me.phone, after = lastId;
+  let rows = [];
+  try { rows = await api(`/api/messages?phone=${encodeURIComponent(phone)}&after=${after}`); } catch { return; }
+  if (!me || (viewing || me.phone) !== phone || after !== lastId) return;
+  rows = rows.filter((m) => !seen.has(m.id));
+  if (!rows.length) return;
+  rows.forEach((m) => seen.add(m.id));
+  lastId = rows[rows.length - 1].id;
+  const chat = $("#chat"), atBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight < 120;
+  $("#typing")?.remove();
+  chat.insertAdjacentHTML("beforeend", rows.map(bubble).join(""));
+  const lm = rows[rows.length - 1];
+  if (!BIZ_PAGE) $("#sidePreview").textContent = (lm.direction === "in" ? "✓✓ " : "") + (lm.kind === "voice" ? "🎙️ Voice message" : lm.kind === "document" ? "📄 Document" : (lm.text || "").split(String.fromCharCode(10))[0]);
+  if (!BIZ_PAGE) $("#sideTime").textContent = hm(lm.created_at);
+  if (busy) typing(true);
+  if (atBottom || rows.some((m) => m.direction === "in")) chat.scrollTop = chat.scrollHeight;
+}
+setInterval(poll, 1200);
+function typing(on) {
+  $("#typing")?.remove();
+  if (on) { $("#chat").insertAdjacentHTML("beforeend", '<div class="typing" id="typing">typing…</div>'); $("#chat").scrollTop = $("#chat").scrollHeight; }
+  if (on) $("#sub").textContent = "typing…"; else subline();
+}
+async function deliver(work) {
+  if (busy) return false;
+  busy = true; typing(true);
+  try { await work(); await poll(); return true; }
+  catch (e) { sys("⚠️ " + e.message); return false; }
+  finally { busy = false; typing(false); }
+}
+
+// ---------- sending
+$("#chat").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-b]");
+  if (b && me) { b.closest(".btns").querySelectorAll("button").forEach((x) => (x.disabled = true)); deliver(() => api("/api/simulate", { method: "POST", body: { phone: me.phone, name: me.name, button: b.dataset.b } })); return; }
+  const p = e.target.closest(".vn-play"); if (p) play(p);
+});
+$("#send").onclick = () => {
+  const t = $("#text").value.trim(); if (!t || !me) return;
+  $("#text").value = "";
+  if (viewing && viewing !== me.phone) { api("/api/live/reply", { method: "POST", body: { phone: viewing, text: t } }).then(poll).catch((e) => sys("⚠️ " + e.message)); return; }
+  deliver(() => api("/api/simulate", { method: "POST", body: { phone: me.phone, name: me.name, text: t } }));
+};
+$("#text").onkeydown = (e) => { if (e.key === "Enter" && !e.isComposing) $("#send").click(); };
+$("#file").onchange = (e) => {
+  const f = e.target.files[0]; if (!f || !me) return;
+  const audio = f.type.startsWith("audio/");
+  const fd = new FormData(); fd.append("phone", me.phone); fd.append("file", f);
+  deliver(() => api(audio ? "/api/simulate/audio" : "/api/simulate/media", { method: "POST", body: fd }));
+  e.target.value = "";
+};
+
+// Voice notes: tap mic to record, tap again to send (works on phones over HTTPS).
+let rec = null, recStart = 0, recTimer = null, cancelled = false;
+$("#mic").onclick = async () => {
+  if (!me) return;
+  if (rec?.state === "recording") { rec.stop(); return; }
+  try {
+    const id = store.get("bolo-mic");
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: id ? { deviceId: { exact: id }, echoCancellation: true, noiseSuppression: true } : { echoCancellation: true, noiseSuppression: true } });
+    meter(stream);
+    const chunks = []; cancelled = false;
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = (e) => chunks.push(e.data);
+    rec.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop()); clearInterval(recTimer); meter(null);
+      $("#mic").classList.remove("rec"); $("#mic").textContent = "🎙️";
+      $("#recinfo").classList.add("hidden"); $("#field").classList.remove("hidden");
+      if (cancelled || !chunks.length) return;
+      const mime = rec.mimeType || "audio/webm", ext = mime.includes("mp4") ? "m4a" : mime.includes("ogg") ? "ogg" : "webm";
+      const fd = new FormData(); fd.append("phone", me.phone); fd.append("file", new File(chunks, "note." + ext, { type: mime }));
+      deliver(() => api("/api/simulate/audio", { method: "POST", body: fd }));
+    };
+    rec.start(); recStart = Date.now();
+    $("#mic").classList.add("rec"); $("#mic").textContent = "➤";
+    $("#field").classList.add("hidden"); $("#recinfo").classList.remove("hidden");
+    recTimer = setInterval(() => { const s = Math.floor((Date.now() - recStart) / 1000); $("#rectime").textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; }, 250);
+  } catch { sys("🎙️ Microphone blocked. Allow the mic for this site, or open it over https."); }
+};
+// Pick the wireless/USB mic; show a live level so the speaker sees it is being heard.
+async function listMics() {
+  try {
+    const devs = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "audioinput");
+    const cur = store.get("bolo-mic") || "";
+    $("#micSel").innerHTML = '<option value="">System default</option>' + devs.filter((d) => d.deviceId && d.deviceId !== "default")
+      .map((d, i) => `<option value="${esc(d.deviceId)}" ${d.deviceId === cur ? "selected" : ""}>${esc(d.label || "Microphone " + (i + 1))}</option>`).join("");
+  } catch {}
+}
+$("#micSel").onchange = () => store.set("bolo-mic", $("#micSel").value || null);
+let meterCtx = null, meterRaf = 0;
+function meter(stream) {
+  cancelAnimationFrame(meterRaf); if (meterCtx) { meterCtx.close(); meterCtx = null; } $("#level").style.width = "0";
+  if (!stream) return;
+  meterCtx = new AudioContext(); const an = meterCtx.createAnalyser(); an.fftSize = 512;
+  meterCtx.createMediaStreamSource(stream).connect(an);
+  const buf = new Uint8Array(an.fftSize);
+  const tick = () => { an.getByteTimeDomainData(buf); let peak = 0; for (const v of buf) peak = Math.max(peak, Math.abs(v - 128));
+    $("#level").style.width = Math.min(100, peak * 1.6) + "%"; meterRaf = requestAnimationFrame(tick); };
+  tick();
+}
+$("#cancelRec").onclick = () => { cancelled = true; rec?.stop(); };
+
+let audio = null, audioBtn = null;
+function play(b) {
+  if (audioBtn === b && audio && !audio.paused) { audio.pause(); b.textContent = "▶"; return; }
+  if (audio) { audio.pause(); if (audioBtn) audioBtn.textContent = "▶"; }
+  audio = new Audio(b.dataset.src); audioBtn = b; b.textContent = "❚❚";
+  const fill = b.parentElement.querySelector(".fill"), dur = b.parentElement.querySelector(".dur");
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  audio.ontimeupdate = () => { if (audio.duration) { fill.style.width = 100 * audio.currentTime / audio.duration + "%"; dur.textContent = fmt(audio.currentTime); } };
+  audio.onended = () => { b.textContent = "▶"; fill.style.width = "0"; dur.textContent = fmt(audio.duration || 0); };
+  audio.play().catch(() => (b.textContent = "▶"));
+}
+
+loadShop().then(() => {
+  document.querySelector(".tabs").classList.add("hidden");
+  if (BIZ_PAGE) {
+    tab(true); history.replaceState(null, "", "/business"); $("#bFresh").checked = false;
+    document.querySelector(".join header h1").textContent = "Business login";
+    $("#shopLine").textContent = "Log in to your shop's assistant. See every customer chat live and run the shop by voice.";
+  } else { tab(false); history.replaceState(null, "", location.pathname); }
+  if (me?.phone) start(me.name, me.phone, me.role);
+});
+</script>
+</body>
+</html>

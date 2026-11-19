@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f8f7f2">
+  <title>Bolo · A WhatsApp assistant you can teach by voice</title>
+  <!-- Built-in ImageGen, shopkeeper.png. Final prompt: Photorealistic editorial photograph for the Bolo product website. A fictional middle-aged Bengaluru kirana shopkeeper recording a WhatsApp voice note, his smartphone held naturally near his mouth behind the worn wooden counter of a small neighbourhood grocery. Waist-up profile facing slightly left, head in upper-middle right. Lined face, short moustache, muted teal shirt with sleeves rolled, lively shop shelves, spice jars and packets softly out of focus. Natural warm afternoon storefront light, nuanced amber and forest-green tones, premium documentary film still, authentic unposed gesture. Square composition, no writing, readable labels, logos or overlay graphics. -->
+  <link rel="icon" href="mark.svg"><link rel="stylesheet" href="style.css">
+  <script src="common.js" defer></script>
+  <script>
+  // Locally each side has its own port (8001 customer, 8002 business); through a tunnel they share one host.
+  addEventListener("DOMContentLoaded", () => document.querySelectorAll(".try-card").forEach((a) => {
+    const local = ["localhost", "127.0.0.1"].includes(location.hostname) && location.port;
+    a.href = local ? `${location.protocol}//${location.hostname}:${a.dataset.port}${a.dataset.path}` : a.dataset.path;
+    a.target = "_blank";
+  }));
+  </script>
+</head>
+<body>
+  <header id="top" class="topbar"><div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Bolo home"><img src="mark.svg" alt="">bolo<span>.</span></a>
+    <nav aria-label="Main navigation"><a href="#difference">Why Bolo</a><a href="#workflow">Kirana example</a><a class="nav-demo" href="#try">Try it live</a></nav>
+  </div></header>
+  <main>
+    <section class="wrap hero">
+      <div class="hero-copy">
+        <h1>Tell Bolo what you want to get done in a <em>WhatsApp voice note.</em></h1>
+        <p>The idea behind Bolo is that you can bring any task you have in mind to one WhatsApp assistant. You decide what the job is, who’s involved and which decisions need your approval. As the work changes, you keep talking to the same contact.</p>
+        <p>Today you can ask, “Who can cover Saturday’s shift?” and get a tally, tell Bolo which students were absent, or turn a supplier’s prices into a quotation for approval. You can switch features on or off and teach rules by voice.</p>
+        <a class="primary big" href="#workflow">Read the kirana example</a>
+      </div>
+      <figure class="hero-shot">
+        <img src="shopkeeper.png" alt="Illustration of a kirana shopkeeper recording a voice note behind his counter." fetchpriority="high">
+        <div class="photo-audio">
+          <button id="sample-play" class="sample-play" aria-label="Play example voice note"><i data-icon="play"></i></button>
+          <div><div class="audio-label">Example voice note</div><div class="wave" aria-hidden="true"></div><span>“Ramesh ne ₹450 ka saman liya.”</span></div>
+        </div>
+        <audio id="sample" src="example.wav" preload="none"></audio>
+      </figure>
+    </section>
+    <section id="workflow" class="section process" aria-labelledby="kirana-heading"><div class="wrap kirana-story">
+      <div>
+        <h2 id="kirana-heading">Our first test case is a kirana shopkeeper.</h2>
+        <p>The shopkeeper records ₹450 in Ramesh’s khata. Ramesh gets the entry and replies, “Wait, it was ₹350.”</p>
+      </div>
+      <div>
+        <h3>Now there are two amounts in the chat. Which one goes in the book?</h3>
+        <p>Bolo takes Ramesh’s reply back to the shopkeeper and asks, “Keep ₹450 or change it to ₹350?” The shopkeeper can listen to the original voice note before choosing. If they approve ₹350, Bolo updates the khata and keeps the old entry so anyone checking it later can see what changed.</p>
+        <p>A general chatbot could do this if someone connected it to the shop’s books and set up the rules. <strong>With Bolo, the shopkeeper gets the whole process ready to use. The customer can question a charge, and the shopkeeper has the final say.</strong></p>
+      </div>
+    </div></section>
+    <section class="wrap section">
+      <div class="eyebrow"><span class="small-line"></span> WHY VOICE</div>
+      <h2>Because nobody at a shop counter has free hands.</h2>
+      <div class="try-grid">
+        <div class="try-card"><b>🛒 The customer</b><span>Sends “bhaiya do packet atta aur ek oil bhej do” and gets a priced order to confirm, in Kannada, Hindi, Tamil or English.</span></div>
+        <div class="try-card"><b>🏪 The owner</b><span>Says “tomato ka rate 40, sabko bata do”. The price list changes and every customer is told in their own language.</span></div>
+        <div class="try-card"><b>🤝 Both sides</b><span>Every entry keeps its voice note. The customer can say “galat hai, 350 tha” and the owner decides with one tap.</span></div>
+      </div>
+    </section>
+    <section id="try" class="wrap section">
+      <div class="eyebrow"><span class="small-line"></span> TRY IT LIVE</div>
+      <h2>Two sides of the same conversation.</h2>
+      <p>Open both on different screens (or a phone and a laptop). Everything you say on one side shows up on the other.</p>
+      <div class="try-grid">
+        <a class="try-card" data-port="8001" data-path="/chat/"><b>🛒 Customer side</b><span>A WhatsApp-style chat with the shop. Send a voice note in any language: ask your balance, order atta and oil, dispute an amount, say you paid.</span><em>Open customer chat →</em></a>
+        <a class="try-card" data-port="8002" data-path="/business"><b>🏪 Business side</b><span>Log in as the shop. Talk to your assistant by voice, see every customer chat live, step in and reply, customise what the bot does.</span><em>Open business portal →</em></a>
+        <a class="try-card" data-port="8000" data-path="/console/"><b>📊 Dashboard</b><span>The khata with audio for every entry, approvals, polls, people and roles, products and the tamper-evident ledger check.</span><em>Open dashboard →</em></a>
+      </div>
+    </section>
+    <section id="difference" class="wrap section difference">
+      <div><div class="eyebrow"><span class="small-line"></span> WHY BOLO</div><h2>What changes for the shop?</h2><p>The conversation happens where people already talk. Its outcome becomes a record both sides can follow.</p></div>
+      <div class="comparison" role="table" aria-label="Compare a chat and paper notebook with Bolo">
+        <div class="compare-row ct" role="row"><span role="columnheader">Chat + paper notebook</span><span role="columnheader">With Bolo</span></div>
+        <div class="compare-row" role="row"><span role="cell">Replay a voice note and copy the amount by hand.</span><span role="cell">Check a proposed entry before it goes into the books.</span></div>
+        <div class="compare-row" role="row"><span role="cell">Search older messages to settle a disagreement.</span><span role="cell">Play the recording attached to the original entry.</span></div>
+        <div class="compare-row" role="row"><span role="cell">Cross out an amount when someone spots a mistake.</span><span role="cell">See the reversal, the corrected entry, and the new balance.</span></div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap foot"><span><b>Bolo</b> · Team Axon</span><a href="#top">Back to top</a></div></footer>
+</body></html>

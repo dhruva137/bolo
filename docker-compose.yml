@@ -1,0 +1,15 @@
+# docker compose up --build
+#   http://localhost:8000  landing page + dashboard      http://localhost:8001  customer chat      http://localhost:8002  business portal
+services:
+  bolo:
+    build: .
+    ports: ["8000:8000", "8001:8001", "8002:8002"]
+    volumes: ["bolo-data:/app/data"]
+    environment:
+      # "1" = key-free offline demo. Set to "0" and fill .env to use Sarvam/Groq/Gemini cloud speech and AI.
+      BOLO_OFFLINE: ${BOLO_OFFLINE:-1}
+    env_file:
+      - path: .env
+        required: false
+volumes:
+  bolo-data:

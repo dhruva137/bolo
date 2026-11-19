@@ -1,0 +1,319 @@
+{
+  "mode": "dual",
+  "model": null,
+  "notes": 15,
+  "totals": {
+    "amount": {
+      "correct": 3,
+      "eligible": 12
+    },
+    "name": {
+      "correct": 2,
+      "eligible": 15
+    },
+    "action": {
+      "correct": 4,
+      "eligible": 15
+    }
+  },
+  "results": [
+    {
+      "id": "hi01",
+      "transcript": "फाबीमाने ₹50 का सामान लिया।",
+      "alternate": "Fatima nepechaas lupieca saman lia",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Fatima",
+            "amount": 50
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi02",
+      "transcript": "सेल में ₹75 दे।",
+      "alternate": "Say me, never check the rope.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi03",
+      "transcript": "Rameshanna, Nandini Milk 5kg, Parle-G, Rice Sona Masoori, Tomato, Onion, Cement bag.",
+      "alternate": "I'm going to go to the next one.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Rameshanna",
+            "items": [
+              "Nandini Milk 5kg",
+              "Parle-G",
+              "Rice Sona Masoori",
+              "Tomato",
+              "Onion",
+              "Cement bag"
+            ]
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi04",
+      "transcript": "लक्ष्मी ने ₹200 दिए।",
+      "alternate": "La c'vi nevo solo piede",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "record_payment",
+          "args": {
+            "name": "Lakshmi",
+            "amount": 200
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": true,
+        "amount": true
+      }
+    },
+    {
+      "id": "hi05",
+      "transcript": "Fatima Kitabaki.",
+      "alternate": "Fá bíma kakit að báki, hei?",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    },
+    {
+      "id": "kn01",
+      "transcript": "Lakshmi akka.",
+      "alternate": "Lakshmi á matur lópa í kjóttalu.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "sarvam",
+      "prediction": [
+        {
+          "tool": "query_balance",
+          "args": {
+            "name": "Lakshmi akka"
+          }
+        },
+        {
+          "tool": "query_balance",
+          "args": {
+            "name": "Lakshmi á matur lópa í kjóttalu"
+          }
+        }
+      ],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn02",
+      "transcript": "Fatima et patro pa isala peghe du tondalo.",
+      "alternate": "Fatima et Patropa y Salat de Geduciongalu",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "hosted planner unavailable",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn03",
+      "transcript": "Seldi Balu Dooro Paay I Chotalo.",
+      "alternate": "se il diavallo dollo lo paghi costa lo",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "sarvam",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn04",
+      "transcript": "Rameshanna.",
+      "alternate": "I'm going to get a little bit of a",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "hosted planner unavailable",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn05",
+      "transcript": "Lakshmi akka.",
+      "alternate": "Like me, tobacco.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    },
+    {
+      "id": "mix01",
+      "transcript": "Fatima N. fifty rupees, KSRTC Milk 5kg,",
+      "alternate": "Fatimani, 50 rupees, car salmon, Leo.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "groq",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "Fatima N.",
+            "amount": 50,
+            "items": [
+              {
+                "name": "KSRTC Milk",
+                "qty": "5kg"
+              }
+            ]
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": false,
+        "amount": true
+      }
+    },
+    {
+      "id": "mix02",
+      "transcript": "Lakshmi two hundred rupees paid.",
+      "alternate": "Lakshmini 200 rupees paid.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "hosted planner unavailable",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix03",
+      "transcript": "Elminipachataruping.",
+      "alternate": "I'll be the Pachata Rupee tonight.",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "sarvam",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix04",
+      "transcript": "Rameshanna Manju Sri Balaji Traders Credit Limited.",
+      "alternate": "Remesh Kumani cha sao pachaz ka credit liya",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "sarvam",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix05",
+      "transcript": "Fatima Kabalankar kit hi.",
+      "alternate": "Fatima Carballan Skitna High",
+      "engines": [
+        "sarvam",
+        "groq"
+      ],
+      "planner": "hosted planner unavailable",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    }
+  ]
+}

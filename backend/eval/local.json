@@ -1,0 +1,254 @@
+{
+  "mode": "local",
+  "model": "whisper-tiny",
+  "notes": 15,
+  "totals": {
+    "amount": {
+      "correct": 1,
+      "eligible": 12
+    },
+    "name": {
+      "correct": 0,
+      "eligible": 15
+    },
+    "action": {
+      "correct": 1,
+      "eligible": 15
+    }
+  },
+  "results": [
+    {
+      "id": "hi01",
+      "transcript": "فاپیمہ میں پر چاہس لکہ سمان لیا",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi02",
+      "transcript": "Se il menevo cattorlo il menevo",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi03",
+      "transcript": "Come me stumando e sarche di insolucile Cassamagnia.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi04",
+      "transcript": "را برس برس رونی ده",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "hi05",
+      "transcript": "Farh maka kita, maka kita, maka kita.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    },
+    {
+      "id": "kn01",
+      "transcript": "Schmeimat du lupar ich noch da lupar.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn02",
+      "transcript": "อาดที่มากษ์พัสดูลวปาออัสดูลวปาออัสดูลวปาออร์ สาอร์และเกี่ยดตูกรมเธอลูก",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn03",
+      "transcript": "Se il dia è vado solo l'opa, mi crocca l'op.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn04",
+      "transcript": "Ramecht du mal nur nur noch ein paar isaler B揭ketok unter uns.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "kn05",
+      "transcript": "Lack ich mir jetzt so mal.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    },
+    {
+      "id": "mix01",
+      "transcript": "Fathyn i 50 rwi'n cwrs am ymlyd.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [
+        {
+          "tool": "add_credit",
+          "args": {
+            "name": "fathyn",
+            "amount": 50.0
+          }
+        }
+      ],
+      "correct": {
+        "action": true,
+        "name": false,
+        "amount": true
+      }
+    },
+    {
+      "id": "mix02",
+      "transcript": "actually need to hunt with Ruby's pain.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix03",
+      "transcript": "Bellbini patch at the root of the eye.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix04",
+      "transcript": "Rämmas kumar ni, tjärs, särskar, tjärskar, kredit livet.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": false
+      }
+    },
+    {
+      "id": "mix05",
+      "transcript": "Fatima Carmallon's kit of height.",
+      "alternate": "",
+      "engines": [
+        "whisper-tiny"
+      ],
+      "planner": "rules",
+      "prediction": [],
+      "correct": {
+        "action": false,
+        "name": false,
+        "amount": null
+      }
+    }
+  ]
+}

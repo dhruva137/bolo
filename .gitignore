@@ -1,0 +1,27 @@
+node_modules/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+*.db
+*.sqlite
+data/audio/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+data/
+
+# Local-only (team notes and hackathon release tooling; kept on disk, not published)
+team/
+eval/
+scripts/make-submission.ps1
+scripts/release-common.ps1
+scripts/tag.ps1
+scripts/test-release.ps1
