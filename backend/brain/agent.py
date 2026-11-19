@@ -1094,7 +1094,7 @@ async def t_update_price(c, args, **kw):
         return
     db.audit(c["phone"], "price_update", done)
     said = (kw.get("text") or "").lower()
-    if args.get("notify") or re.search(r"sab(ko|ke)|sabhi|everyone|all customers|notify|bata do|batao|bhej do", said):
+    if args.get("notify") or re.search(r"sab(ko|ke)|sabhi|everyone|all customers|notify|bata do|batao|bhej do|सबको|सब को|सभी|बता दो|बताओ", said):
         # Every customer hears it in their own language (Kannada, Hindi, Tamil, English...).
         shop = db.setting("shop_name") or "Shop"
         people = [x for x in C.all_contacts() if x["role"] == "customer" and x["phone"]]

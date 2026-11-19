@@ -82,7 +82,14 @@ def _system(role: str) -> str:
     )
 
 
+# "tomato ka rate ab 40", or a transcript in mixed script: "Tomato का rate अब 40 हो गया"
+PRICE_RE = re.compile(r"([a-zऀ-ॿ][a-zऀ-ॿ\- ]{1,30}?)\s+(?:ka|ki|ke|का|की|के)?\s*"
+                      r"(?:rate|price|bhav|bhaav|daam|keemat|रेट|भाव|दाम|कीमत)\s*(?:ab|aaj|अब|आज)?\s*(\d+(?:\.\d+)?)")
+
+
 def plan(text: str, role: str, text_b: str = "") -> tuple[list[dict], str]:
+    if role != "customer" and PRICE_RE.search(text.lower()):
+        return rule_plan(text, role), "rules"  # a price change: never let the LLM read it as udhaar
     if role != "customer" and re.match(r"\s*(yaad rakh|yaad rakhna|note kar|customers? ko bata(na|o)? ki)\b", text.lower()):
         return rule_plan(text, role), "rules"  # a shop fact for customers, not a reminder
     user = f"{_context(role)}\nTRANSCRIPT A: {text}\n" + (f"TRANSCRIPT B: {text_b}\n" if text_b else "")
@@ -255,7 +262,7 @@ def rule_plan(text: str, role: str) -> list[dict]:
         return [{"tool": "save_rule", "args": {"rule": text.strip()}}]
     if re.search(r"^(yaad rakh|yaad rakhna|note kar|customers? ko bata(na|o)? ki)", low_all):
         return [{"tool": "save_fact", "args": {"text": re.sub(r"^(yaad rakhna|yaad rakh|note kar|customers? ko bata(na|o)? ki)\s*[:,\-]?\s*", "", norm, flags=re.I).strip(" :,-")}}]
-    m = re.search(r"([a-z][a-z ]{1,30}?)\s+(?:ka|ki|ke)?\s*(?:rate|price|bhav|bhaav|daam|keemat)\s*(?:ab|aaj)?\s*(\d+(?:\.\d+)?)", low_all)
+    m = PRICE_RE.search(low_all)
     if m:
         return [{"tool": "update_price", "args": {"items": [{"name": m.group(1).strip(), "price": float(m.group(2))}]}}]
     whole = _whole_note_intent(norm)
