@@ -27,7 +27,9 @@ STT_LANGS = {"bn-IN", "en-IN", "gu-IN", "hi-IN", "kn-IN", "ml-IN", "mr-IN", "od-
 
 
 def _lang(c: dict | None) -> str:
-    return (c or {}).get("lang") or "hi-IN"
+    # "reply_lang" (business setting) makes Bolo answer everyone in one language, e.g. English for a demo;
+    # each contact's own language is still used to listen to their voice notes.
+    return db.setting("reply_lang") or (c or {}).get("lang") or "hi-IN"
 
 
 def _owner_phone() -> str:
@@ -114,7 +116,7 @@ async def handle(phone: str, kind: str, text: str = "", audio_bytes: bytes | Non
         text = a.text or b.text
         text_b = b.text if a.text else ""
         conf = b.confidence
-        if a.language in STT_LANGS and (a.confidence or 0) >= 0.6 and a.language != contact["lang"] and contact["role"] != "owner":
+        if a.language in STT_LANGS and (a.confidence or 0) >= 0.6 and a.language != contact["lang"] and contact["role"] != "owner" and db.setting("lang_lock") != "1":
             db.run("UPDATE contacts SET lang=? WHERE id=?", (a.language, contact["id"]))
             contact["lang"] = a.language
         meta = {"primary_stt": a.engine if a.text or a.engine == "whisper-local" else (b.engine if b.text else None),
@@ -185,17 +187,23 @@ async def review_voice(phone: str, message_id: int, text: str, discard: bool) ->
 
 async def _act_on_transcript(contact: dict, text: str, text_b: str, conf: float | None, audio_sha: str) -> None:
     phone = contact["phone"]
-    reply = text.strip().lower().strip(".!,?।").strip()
-    affirmations = {"haan", "han", "yes", "sahi hai", "हाँ", "हां", "ಹೌದು", "haudu"}
-    if reply in affirmations or reply in {"1", "2", "3"}:
+    reply = re.sub(r"[.!,?।]", " ", text.strip().lower())
+    reply = re.sub(r"\s+", " ", reply).strip()
+    # Answering a card by voice instead of tapping: "haan, confirm karo", "pehla wala", "dusra".
+    ordinals = {"1": 1, "2": 2, "3": 3, "ek": 1, "pehla": 1, "pehla wala": 1, "pehle wala": 1, "first": 1, "पहला": 1,
+                "पहला वाला": 1, "पहले वाला": 1, "पहले वाले": 1, "dusra": 2, "doosra": 2, "dusra wala": 2, "second": 2,
+                "दूसरा": 2, "दूसरा वाला": 2, "teesra": 3, "third": 3, "तीसरा": 3}
+    affirm = (len(reply.split()) <= 5 and
+              re.match(r"^(haan|han|ha|yes|ok|okay|sahi|theek|confirm|हाँ|हां|हा|ठीक|सही|कन्फर्म|ಹೌದು|haudu)(?![a-z])", reply))  # \b fails after Hindi vowel marks
+    if affirm or reply in ordinals:
         last = db.q1("SELECT buttons FROM messages WHERE phone=? AND direction='out' AND kind!='voice' "
                      "ORDER BY id DESC LIMIT 1", (phone,))
         buttons = json.loads((last or {}).get("buttons") or "[]")
-        if reply in affirmations:
-            chosen = next((bid for bid, _ in buttons if bid.startswith(("ok:", "agree:"))), None)
-        else:
-            idx = int(reply) - 1
+        if reply in ordinals:
+            idx = ordinals[reply] - 1
             chosen = buttons[idx][0] if idx < len(buttons) else None
+        else:
+            chosen = next((bid for bid, _ in buttons if bid.startswith(("ok:", "agree:")) or bid.endswith(":ok")), None)
         if chosen:
             await on_button(contact, chosen, audio_sha)
             return

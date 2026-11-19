@@ -72,7 +72,7 @@ sequenceDiagram
 ```
 
 ## Demo stories
-**1-minute demo video:** [docs/bolo-demo.mp4](docs/bolo-demo.mp4), recorded from the running app: real voice notes go through the real pipeline, with the owner and the customer side by side.
+**1-minute demo video:** [docs/bolo-demo.mp4](docs/bolo-demo.mp4), recorded from the running app: real voice notes go through the real pipeline, with the owner and the customer side by side. Pitch deck: [docs/Bolo-pitch.pptx](docs/Bolo-pitch.pptx).
 
 One-line copy-paste cheat sheet: **[docs/demo-lines.md](docs/demo-lines.md)**. Eight role-play stories (two Rameshes, voice orders, the ₹350 dispute, "I paid on GPay", the team poll, the Khata Passport, the owner's price broadcast and the English-speaking customer) with exact lines to speak: **[docs/demo-stories.md](docs/demo-stories.md)**. Pitch, GTM and judge Q&A: [docs/pitch.md](docs/pitch.md).
 
